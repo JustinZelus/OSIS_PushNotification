@@ -52,14 +52,14 @@ namespace ConsoleApp1
 
             IP8FileHelper p8FileHelper = new P8FileHelper(GetP8FilePath());
             Debug.WriteLine(p8FileHelper.ToString());
-
+            var ddd = p8FileHelper.GetP8Key();
             iOSPushService = IOSPushNotificationService.Builder()
                                 .SetP8key(p8FileHelper.GetP8Key()) //require
                                 .SetP8keyID(p8FileHelper.GeP8KeyID()) //require
                                 .SetP8TeamID(p8FileHelper.GetTeamID()) //require
-                                .SetAppBundleID(appBundleID) ////require
-                                .SetAPNsServer(APNsServer.Development) ////require
-                                .Build();
+                                .SetAppBundleID(appBundleID) //require
+                                .SetAPNsServer(APNsServer.Development) //require
+                                .Build(); //require
             await DoSomething();
 
         }
