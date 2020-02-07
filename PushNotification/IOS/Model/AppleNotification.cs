@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PushNotification.IOS.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +8,7 @@ namespace PushNotification.IOS.Model
 {
     public class AppleNotification
     {
-        public class ApsPayload
+        public class ApsPayload: IApsPayload
         {
             [JsonProperty("alert")]
             public AlertBody AlertBody { get; set; }
@@ -23,7 +24,7 @@ namespace PushNotification.IOS.Model
         }
 
         [JsonProperty("aps")]
-        public ApsPayload Aps { get; set; }
+        public IApsPayload Aps { get; set; }
 
 
         public class DetailPlayload
@@ -35,7 +36,7 @@ namespace PushNotification.IOS.Model
 
     }
 
-    public class AlertBody
+    public class AlertBody: IAlertBody
     {
         [JsonProperty("title")]
         public string Title { get; set; }

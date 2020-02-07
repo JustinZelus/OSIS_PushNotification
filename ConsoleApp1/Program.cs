@@ -62,9 +62,6 @@ namespace ConsoleApp1
                                 .Build();
             await DoSomething();
 
-
-
-
         }
 
         async static Task DoSomething()
@@ -92,7 +89,7 @@ namespace ConsoleApp1
             alertBody.SubTitle = "副標題";
             alertBody.Content = "內文2";
 
-            var payload = new AppleNotification.ApsPayload();
+            var payload = new ApsPayload();
             payload.Category = "NORMAL"; 
             payload.Badge = 22;
             payload.Sound = "default";
