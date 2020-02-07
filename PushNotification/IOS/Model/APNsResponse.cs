@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PushNotification.IOS.Model
 {
-    class APNsResponse
+    public class APNsResponse
     {
         public HttpStatusCode statusCode { get; set; }
         public bool IsSuccess { get; set; }

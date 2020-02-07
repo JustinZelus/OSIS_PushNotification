@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PushNotification.IOS.Enums
 {
-    enum APNsServer
+    public enum APNsServer
     {
         Development,
         Production

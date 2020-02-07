@@ -7,7 +7,7 @@ namespace PushNotification.IOS.Interfaces
     /// <summary>
     /// P8File Interface
     /// </summary>
-    interface IP8FileHelper
+    public interface IP8FileHelper
     {
         string GetP8Key();
         string GeP8KeyID();

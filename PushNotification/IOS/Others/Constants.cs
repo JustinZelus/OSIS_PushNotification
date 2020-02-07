@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PushNotification.IOS.Others
 {
-    class Constants
+    public class Constants
     {
         public static readonly string iosFolder = @"Apple";
         public static readonly string KEY_WORD = "Key";

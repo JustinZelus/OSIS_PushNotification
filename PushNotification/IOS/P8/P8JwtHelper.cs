@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PushNotification.IOS.P8
 {
-    class P8JwtHelper : BaseP8JwtHelper
+    public class P8JwtHelper : BaseP8JwtHelper
     {
         IP8PushToken p8PushToken;
 

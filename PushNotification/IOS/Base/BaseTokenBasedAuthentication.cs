@@ -8,7 +8,7 @@ using System.Text;
 namespace PushNotification.IOS.Base
 {
     //照官方文件設計出來的抽象類
-    abstract class BaseTokenBasedAuthentication : BasedAuthentication, ITokenBasedAuthentication, IP8EncryptJwt
+    public abstract class BaseTokenBasedAuthentication : BasedAuthentication, ITokenBasedAuthentication, IP8EncryptJwt
     {
         public string P8key { get; set; }
         public string P8keyID { get; set; }

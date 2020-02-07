@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.FileProviders;
-using Newtonsoft.Json;
-using PushNotification.IOS;
+﻿using Newtonsoft.Json;
 using PushNotification.IOS.Enums;
 using PushNotification.IOS.Interfaces;
 using PushNotification.IOS.Main;
@@ -9,14 +7,12 @@ using PushNotification.IOS.P8;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using static PushNotification.IOS.Model.AppleNotification;
 
-namespace PushNotification
+namespace ConsoleApp1
 {
+
     /// <summary>
     /// IOS推播使用範例
     /// 
@@ -97,7 +93,7 @@ namespace PushNotification
             alertBody.Content = "內文2";
 
             var payload = new AppleNotification.ApsPayload();
-            payload.Category = "NORMAL";
+            payload.Category = "NORMAL"; 
             payload.Badge = 22;
             payload.Sound = "default";
             payload.AlertBody = alertBody;
@@ -121,3 +117,4 @@ namespace PushNotification
             return p8FilePath;
         }
     }
+}

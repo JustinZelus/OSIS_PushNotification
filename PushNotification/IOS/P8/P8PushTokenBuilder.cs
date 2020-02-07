@@ -10,7 +10,7 @@ using System.Text;
 
 namespace PushNotification.IOS.P8
 {
-    class P8PushTokenBuilder
+    public  class P8PushTokenBuilder
     {
       
         private string _p8key;
@@ -51,7 +51,6 @@ namespace PushNotification.IOS.P8
             } 
 
             var jwt = "";
-            //var validTime = _validTime == 0 ? Tools.CreateEpochTime() : _validTime;
 
             var header = JsonConvert.SerializeObject(new { alg = "ES256", kid = _p8keyID });
             var payload = JsonConvert.SerializeObject(new { iss = _teamID, iat = _validTime });

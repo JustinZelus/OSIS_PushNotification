@@ -4,11 +4,11 @@ using System.Text;
 
 namespace PushNotification.IOS.Interfaces
 {
-    interface IP8EncryptJwt
+    public interface IP8EncryptJwt
     {
         string GetJwt();
     }
-    interface ITokenBasedAuthentication
+    public interface ITokenBasedAuthentication
     {
         string P8key { get; set; }
         string P8keyID { get; set; }

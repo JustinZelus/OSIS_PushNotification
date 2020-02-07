@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PushNotification.IOS.Main
 {
-    class APNsSender : IAPNs
+    public class APNsSender : IAPNs
     {
         private static readonly Dictionary<APNsServer, string> servers = new Dictionary<APNsServer, string>
         {

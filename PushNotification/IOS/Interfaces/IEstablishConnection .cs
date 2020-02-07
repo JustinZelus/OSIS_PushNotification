@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PushNotification.IOS.Interfaces
 {
-    interface IEstablishConnection
+    public interface IEstablishConnection
     {
         string TeamID { get; set; }
     }

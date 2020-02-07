@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PushNotification.IOS.IO
 {
-    interface IFileHelper
+    public interface IFileHelper
     {
         string RootPath { get; }
         void Create(string path, string fileName);

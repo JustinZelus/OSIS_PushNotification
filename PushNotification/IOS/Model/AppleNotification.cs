@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PushNotification.IOS.Model
 {
-    class AppleNotification
+    public class AppleNotification
     {
         public class ApsPayload
         {
@@ -17,18 +17,32 @@ namespace PushNotification.IOS.Model
 
             [JsonProperty("sound")]
             public string Sound { get; set; }
+
+            [JsonProperty("category")]
+            public string Category { get; set; }
         }
-
-
 
         [JsonProperty("aps")]
         public ApsPayload Aps { get; set; }
+
+
+        public class DetailPlayload
+        {
+            public int SN { get; set; }
+        }
+
+        public DetailPlayload Detail { get; set; }
+
     }
 
-    class AlertBody
+    public class AlertBody
     {
         [JsonProperty("title")]
         public string Title { get; set; }
+
+        [JsonProperty("subtitle")]
+        public string SubTitle { get; set; }
+
         [JsonProperty("body")]
         public string Content { get; set; }
     }

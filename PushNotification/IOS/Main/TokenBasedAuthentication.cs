@@ -14,7 +14,7 @@ namespace PushNotification.IOS.Main
     /// 檢查Token有無過期
     /// 產出Token
     /// </summary>
-    class TokenBasedAuthentication : BaseTokenBasedAuthentication
+    public class TokenBasedAuthentication : BaseTokenBasedAuthentication
     {
         private IP8JwtHelper p8JwtHelper;
 
@@ -22,6 +22,7 @@ namespace PushNotification.IOS.Main
         {
             if (p8JwtHelper == null)
             {
+                //P8JwtHelper應該由外部傳進來
                 p8JwtHelper = new P8JwtHelper(P8key, P8keyID, TeamID);
             }
             System.Collections.ICollection d;

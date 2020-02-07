@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PushNotification.IOS.Interfaces
 {
-    interface IAPNs
+    public interface IAPNs
     {
         Task<APNsResponse> SendAsync(object notification,
                                    string deviceToken,

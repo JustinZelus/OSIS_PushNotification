@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PushNotification.IOS.Main
 {
-    class IOSPushNotificationService
+    public class IOSPushNotificationService
     {
         IP8EncryptJwt tokenProvider;
         IAPNs aPNsSender;
@@ -75,13 +75,17 @@ namespace PushNotification.IOS.Main
         public static IOSPushNotificationService Builder() {
                 return new IOSPushNotificationService();
         }
-
+        /// <summary>
+        /// //產生JWT
+        /// //初始化推播類
+        /// </summary>
+        /// <returns></returns>
         public IOSPushNotificationService Build()
         {
-            //產生JWT
+            
             tokenProvider = new TokenBasedAuthentication(_p8key, _p8keyID, _teamID);
             var jwt = tokenProvider.GetJwt();
-            //初始化推播類
+            
             if (!string.IsNullOrEmpty(jwt))
                 aPNsSender = new APNsSender(jwt, _appBundleID);
             return this;

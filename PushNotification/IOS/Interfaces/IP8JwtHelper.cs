@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PushNotification.IOS.Interfaces
 {
-    interface IP8JwtHelper: IP8EncryptJwt
+    public interface IP8JwtHelper: IP8EncryptJwt
     {
         bool ValidateJwtTime();
         void RefreshJwt();

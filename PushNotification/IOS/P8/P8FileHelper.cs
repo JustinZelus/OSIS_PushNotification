@@ -21,7 +21,7 @@ namespace PushNotification.IOS.P8
     /// 
     /// </summary>
 
-    class P8FileHelper : IP8FileHelper
+    public class P8FileHelper : IP8FileHelper
     {
         
         private readonly Dictionary<string, string> p8 = new Dictionary<string, string>()

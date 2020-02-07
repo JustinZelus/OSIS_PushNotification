@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PushNotification.IOS
 {
-    interface IP8PushToken
+    public interface IP8PushToken
     {
         string Jwt { get; set; }
         int ValidTime { get; set; }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PushNotification.IOS.Base
 {
-    abstract class BasedAuthentication : IEstablishConnection
+    public abstract class BasedAuthentication : IEstablishConnection
     {
         public string TeamID { get; set; }
         public BasedAuthentication(string teamID)
