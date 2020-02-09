@@ -53,7 +53,6 @@ namespace PushNotification
 
         async static Task Main(string[] args)
         {
-
             IP8FileHelper p8FileHelper = new P8FileHelper(GetP8FilePath());
             Debug.WriteLine(p8FileHelper.ToString());
 

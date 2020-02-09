@@ -9,7 +9,8 @@ namespace PushNotification.IOS.Interfaces
 {
     public interface IAPNs
     {
-        Task<APNsResponse> SendAsync(object notification,
+        Task<APNsResponse> SendAsync(string jwt,
+                                   object notification,
                                    string deviceToken,
                                    APNsServer envType,
                                    string apnsId = null,

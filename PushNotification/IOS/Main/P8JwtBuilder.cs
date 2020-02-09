@@ -1,56 +1,36 @@
 ﻿using Newtonsoft.Json;
-using PushNotification.IOS.Base;
-using PushNotification.IOS.Model;
-using PushNotification.IOS.Others;
+using PushNotification.IOS.Interfaces;
 using System;
-
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace PushNotification.IOS.P8
+namespace PushNotification.IOS.Main
 {
-    public  class P8PushTokenBuilder
+    //public class P8JwtBuilder : IP8Jwt
+        public class P8JwtBuilder
     {
-      
+       // string IP8Jwt.P8Jwt { get; set; }
+        
         private string _p8key;
         private string _p8keyID;
         private string _teamID;
         private int _validTime;
+        private string _jwt;
 
-        public P8PushTokenBuilder SetP8Key(string key)
-        {
-            _p8key = key;
-            return this;
-        }
+        public string JWT { get => _jwt; }
 
-        public P8PushTokenBuilder SetP8KeyID(string keyID)
-        {
-            _p8keyID = keyID;
-            return this;
-        }
-
-        public P8PushTokenBuilder SetP8TeamID(string teamID)
-        {
-            _teamID = teamID;
-            return this;
-        }
-
-        public P8PushTokenBuilder SetValidTime(int time)
-        {
-            _validTime = time;
-            return this;
-        }
-
-        public IP8PushToken Build()
+        public P8JwtBuilder Build(int time = 0)
         {
             if (!Check())
             {
                 Debug.WriteLine("IP8PushToken Check fail");
                 return null;
-            } 
+            }
 
-            var jwt = "";
+            if (time > 0)
+                _validTime = time;
 
             var header = JsonConvert.SerializeObject(new { alg = "ES256", kid = _p8keyID });
             var payload = JsonConvert.SerializeObject(new { iss = _teamID, iat = _validTime });
@@ -63,19 +43,41 @@ namespace PushNotification.IOS.P8
                 var headerBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(header));
                 var payloadBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(payload));
                 var unsignedJwtData = $"{headerBase64}.{payloadBase64}";
-                var signature = Convert.ToBase64String(dsa.SignData(Encoding.UTF8.GetBytes(unsignedJwtData)));                
-                jwt = $"{unsignedJwtData}.{signature}";
+                var signature = Convert.ToBase64String(dsa.SignData(Encoding.UTF8.GetBytes(unsignedJwtData)));
+                 _jwt = $"{unsignedJwtData}.{signature}";
                 Debug.WriteLine("P8Jwt generate succeed.");
+                return this;
             }
-
-            return new P8PushToken(jwt, _validTime);
         }
 
 
+        public P8JwtBuilder SetP8Key(string key)
+        {
+            _p8key = key;
+            return this;
+        }
+
+        public P8JwtBuilder SetP8KeyID(string keyID)
+        {
+            _p8keyID = keyID;
+            return this;
+        }
+
+        public P8JwtBuilder SetP8TeamID(string teamID)
+        {
+            _teamID = teamID;
+            return this;
+        }
+
+        public P8JwtBuilder SetValidTime(int time)
+        {
+            _validTime = time;
+            return this;
+        }
+
         private bool Check()
         {
-            return !(string.IsNullOrEmpty(_p8key) || string.IsNullOrEmpty(_p8keyID) || string.IsNullOrEmpty(_teamID)
-                || _validTime == 0);
+            return !(string.IsNullOrEmpty(_p8key) || string.IsNullOrEmpty(_p8keyID) || string.IsNullOrEmpty(_teamID));
         }
     }
 }

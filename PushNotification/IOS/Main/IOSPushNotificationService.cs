@@ -8,10 +8,13 @@ using System.Threading.Tasks;
 
 namespace PushNotification.IOS.Main
 {
+ 
+
     public class IOSPushNotificationService
     {
-        IP8EncryptJwt tokenProvider;
+        ITokenBasedAuthentication jwtProvider;
         IAPNs aPNsSender;
+
         private string _p8key;
         private string _p8keyID;
         private string _teamID;
@@ -25,17 +28,19 @@ namespace PushNotification.IOS.Main
 
         public IOSPushNotificationService(string p8key, string p8keyID, string teamID, string appBundleID)
         {
-            tokenProvider = new TokenBasedAuthentication(p8key, p8keyID, teamID);
-            var jwt = tokenProvider.GetJwt();
-
-            if (!string.IsNullOrEmpty(jwt))
-                aPNsSender = new APNsSender(jwt, appBundleID);
+            if (string.IsNullOrEmpty(appBundleID))
+                throw new Exception("appBundleID can't be null");
+            
+            jwtProvider = new TokenBasedAuthentication(p8key, p8keyID, teamID);
+            aPNsSender = new APNsSender(appBundleID);
         }
 
         public async Task<APNsResponse> PushAsync(object notification, string deviceToken)
         {
             if (aPNsSender == null) return null;
-            return await aPNsSender.SendAsync(notification, deviceToken, _envType);
+
+            string jwt = jwtProvider.GetJwt();
+            return await aPNsSender.SendAsync(jwt, notification, deviceToken, _envType);
         }
 
         //public async Task<APNsResponse> Push2(object notification, string deviceToken)
@@ -43,7 +48,12 @@ namespace PushNotification.IOS.Main
         //    if (aPNsSender == null) return null;
         //    return aPNsSender.SendAsync(notification, deviceToken, _envType).Result;
         //}
-
+        public IOSPushNotificationService Build()
+        {
+            jwtProvider = new TokenBasedAuthentication(_p8key, _p8keyID, _teamID);
+            aPNsSender = new APNsSender(_appBundleID);
+            return this;
+        }
         public IOSPushNotificationService SetP8key(string key)
         {
             _p8key = key;
@@ -72,24 +82,10 @@ namespace PushNotification.IOS.Main
             return this;
         }
 
-        public static IOSPushNotificationService Builder() {
-                return new IOSPushNotificationService();
-        }
-        /// <summary>
-        /// //產生JWT
-        /// //初始化推播類
-        /// </summary>
-        /// <returns></returns>
-        public IOSPushNotificationService Build()
+        public static IOSPushNotificationService Builder()
         {
-            
-            tokenProvider = new TokenBasedAuthentication(_p8key, _p8keyID, _teamID);
-            var jwt = tokenProvider.GetJwt();
-            
-            if (!string.IsNullOrEmpty(jwt))
-                aPNsSender = new APNsSender(jwt, _appBundleID);
-            return this;
+            return new IOSPushNotificationService();
         }
-
+      
     }
 }

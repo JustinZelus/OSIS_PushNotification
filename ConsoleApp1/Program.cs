@@ -39,7 +39,7 @@ namespace ConsoleApp1
     class Program
     {
         //欲推播的手機token
-        static string devicetoken1 = "73fc49879af114304e8203f4b3fb2cd3d93d832c68676fffaae809d5628f25d5"; //justin
+        static string devicetoken1 = "b40db45b653af242115f0362946897d925962dfa208d677c1f6f1928afa6ab18"; //justin
         static string devicetoken2 = "e2cb81a9417812db39fd1c435c0f1734db50809acf487cf6aed7af827c1eedd4"; //Ruru
         static string devicetoken3 = "25dd28084fbbe6763756a101e4fa283ee07f296b20152586e844de87ee62c08e"; //羿伻
         //
@@ -54,12 +54,15 @@ namespace ConsoleApp1
             Debug.WriteLine(p8FileHelper.ToString());
             var ddd = p8FileHelper.GetP8Key();
             iOSPushService = IOSPushNotificationService.Builder()
-                                .SetP8key(p8FileHelper.GetP8Key()) //require
-                                .SetP8keyID(p8FileHelper.GeP8KeyID()) //require
-                                .SetP8TeamID(p8FileHelper.GetTeamID()) //require
-                                .SetAppBundleID(appBundleID) //require
-                                .SetAPNsServer(APNsServer.Development) //require
-                                .Build(); //require
+                                .SetP8key("MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgNdbDhCgPQOjJ9BQF21Q+IWXvyU/54swqOC5m0jkEvEKgCgYIKoZIzj0DAQehRANCAAR5PatQ2QHIVloZFOe7mwife1MW6fHg3BwRg0az3L6hUrfUY1YXwXGK86gTTUqlSGxnFuCoh/lJ8S/qLaXEC4aE")
+                                .SetP8keyID("RRY854U4N4")
+                                .SetP8TeamID("BK76F98DY7")
+                                //.SetP8key(p8FileHelper.GetP8Key()) 
+                                //.SetP8keyID(p8FileHelper.GeP8KeyID())
+                                //.SetP8TeamID(p8FileHelper.GetTeamID()) 
+                                .SetAppBundleID(appBundleID) 
+                                .SetAPNsServer(APNsServer.Development) 
+                                .Build();
             await DoSomething();
 
         }

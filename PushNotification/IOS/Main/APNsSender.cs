@@ -15,36 +15,37 @@ namespace PushNotification.IOS.Main
 {
     public class APNsSender : IAPNs
     {
+        private readonly string appBundleId;
         private static readonly Dictionary<APNsServer, string> servers = new Dictionary<APNsServer, string>
         {
             {APNsServer.Development,"https://api.development.push.apple.com:443" },
             {APNsServer.Production,"https://api.push.apple.com:443" }
         };
 
+        private readonly Lazy<HttpClient> http;
+        private readonly Lazy<Http2CustomHandler> handler;
         private const string APN_ID = "apns-id";
         private const string APN_ID_TOPIC = "apns-topic";
         private const string APN_EXPIRATION = "apns-expiration";
         private const string APN_PRIORITY = "apns-priority";
         private const string APN_PUSHTYPE = "apns-push-type";
 
-   
+       // private readonly string _jwt;
 
-        private readonly string appBundleId;
-        private readonly string _jwt;
-        private readonly Lazy<HttpClient> http;
-        private readonly Lazy<Http2CustomHandler> handler;
-
-        public APNsSender(string jwt,string appBundleId)
+        public APNsSender(string appBundleId)
         {
-            _jwt = jwt;
-
-
             this.appBundleId = appBundleId;
             this.handler = new Lazy<Http2CustomHandler>(() => new Http2CustomHandler());
             this.http = new Lazy<HttpClient>(() => new HttpClient(handler.Value));
         }
 
-        public async Task<APNsResponse> SendAsync(object notification,
+        //public APNsSender(string jwt,string appBundleId): this(appBundleId)
+        //{
+        //    _jwt = jwt;
+        //}
+
+        public async Task<APNsResponse> SendAsync(string jwt,
+                                            object notification,
                                             string deviceToken,
                                             APNsServer envType,
                                             string apnsId = null,
@@ -69,9 +70,7 @@ namespace PushNotification.IOS.Main
                 //    RequestUri = uri
             };
 
-            var testOneHourToken = "eyJhbGciOiJFUzI1NiIsImtpZCI6IlJSWTg1NFU0TjQifQ==.eyJpc3MiOiJCSzc2Rjk4RFk3IiwiaWF0IjoxNTgwMDE5NjQ1fQ==.EK2ju4LCWjpk8CmQDBMCRWWt77kaefqx5BVAB9zHgheDfbCjySAd7+5P/EE6MZD5LjstRrbg7AkbhQaYGknBBQ==";
-
-            request.Headers.Authorization = new AuthenticationHeaderValue("bearer", _jwt); //jwtToken.Value
+            request.Headers.Authorization = new AuthenticationHeaderValue("bearer", jwt); //jwtToken.Value
             request.Headers.TryAddWithoutValidation(":path", path);
             request.Headers.Add(APN_ID_TOPIC, appBundleId);
             request.Headers.Add(APN_EXPIRATION, apnsExpiration.ToString());
@@ -115,7 +114,7 @@ namespace PushNotification.IOS.Main
                 {
                     statusCode = code,
                     IsSuccess = succeed,
-                    Error = error
+                    Error = error,
                 };
                 Debug.WriteLine("response成功回應: ");
                 Debug.WriteLine("  statusCode:  " + result.statusCode);
