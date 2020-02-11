@@ -5,7 +5,6 @@ using PushNotification.IOS.Enums;
 using PushNotification.IOS.Interfaces;
 using PushNotification.IOS.Main;
 using PushNotification.IOS.Model;
-using PushNotification.IOS.P8;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -53,13 +52,13 @@ namespace PushNotification
 
         async static Task Main(string[] args)
         {
-            IP8FileHelper p8FileHelper = new P8FileHelper(GetP8FilePath());
-            Debug.WriteLine(p8FileHelper.ToString());
+            //IP8FileHelper p8FileHelper = new P8FileHelper(GetP8FilePath());
+            //Debug.WriteLine(p8FileHelper.ToString());
 
             iOSPushService = IOSPushNotificationService.Builder()
-                                .SetP8key(p8FileHelper.GetP8Key()) //require
-                                .SetP8keyID(p8FileHelper.GeP8KeyID()) //require
-                                .SetP8TeamID(p8FileHelper.GetTeamID()) //require
+                                .SetP8key("MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgNdbDhCgPQOjJ9BQF21Q+IWXvyU/54swqOC5m0jkEvEKgCgYIKoZIzj0DAQehRANCAAR5PatQ2QHIVloZFOe7mwife1MW6fHg3BwRg0az3L6hUrfUY1YXwXGK86gTTUqlSGxnFuCoh/lJ8S/qLaXEC4aE")
+                                .SetP8keyID("RRY854U4N4")
+                                .SetP8TeamID("BK76F98DY7")
                                 .SetAppBundleID(appBundleID) ////require
                                 .SetAPNsServer(APNsServer.Development) ////require
                                 .Build();
@@ -101,12 +100,9 @@ namespace PushNotification
             payload.Sound = "default";
             payload.AlertBody = alertBody;
 
-            var detailPlayload = new DetailPlayload();
-            detailPlayload.SN = 12;
-
 
             notification.Aps = payload;
-            notification.Detail = detailPlayload;
+
 
             return notification;
         }

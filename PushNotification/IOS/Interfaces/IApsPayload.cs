@@ -9,7 +9,7 @@ namespace PushNotification.IOS.Interfaces
     public interface IApsPayload
     {
         [JsonProperty("alert")]
-        public AlertBody AlertBody { get; set; }
+        public IAlertBody AlertBody { get; set; }
 
         [JsonProperty("badge")]
         public int Badge { get; set; }

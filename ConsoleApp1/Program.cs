@@ -3,7 +3,7 @@ using PushNotification.IOS.Enums;
 using PushNotification.IOS.Interfaces;
 using PushNotification.IOS.Main;
 using PushNotification.IOS.Model;
-using PushNotification.IOS.P8;
+using PushNotification.IOS.Others;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,7 +12,7 @@ using static PushNotification.IOS.Model.AppleNotification;
 
 namespace ConsoleApp1
 {
-
+    
     /// <summary>
     /// IOS推播使用範例
     /// 
@@ -39,7 +39,7 @@ namespace ConsoleApp1
     class Program
     {
         //欲推播的手機token
-        static string devicetoken1 = "b40db45b653af242115f0362946897d925962dfa208d677c1f6f1928afa6ab18"; //justin
+        static string devicetoken1 = "67a7343e5f1504c66274a48e7bc0053cc1bf6b279584386476d4ef9696ec53d2"; //justin
         static string devicetoken2 = "e2cb81a9417812db39fd1c435c0f1734db50809acf487cf6aed7af827c1eedd4"; //Ruru
         static string devicetoken3 = "25dd28084fbbe6763756a101e4fa283ee07f296b20152586e844de87ee62c08e"; //羿伻
         //
@@ -50,9 +50,9 @@ namespace ConsoleApp1
         async static Task Main(string[] args)
         {
 
-            IP8FileHelper p8FileHelper = new P8FileHelper(GetP8FilePath());
-            Debug.WriteLine(p8FileHelper.ToString());
-            var ddd = p8FileHelper.GetP8Key();
+            //IP8FileHelper p8FileHelper = new P8FileHelper(GetP8FilePath());
+            //Debug.WriteLine(p8FileHelper.ToString());
+           
             iOSPushService = IOSPushNotificationService.Builder()
                                 .SetP8key("MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgNdbDhCgPQOjJ9BQF21Q+IWXvyU/54swqOC5m0jkEvEKgCgYIKoZIzj0DAQehRANCAAR5PatQ2QHIVloZFOe7mwife1MW6fHg3BwRg0az3L6hUrfUY1YXwXGK86gTTUqlSGxnFuCoh/lJ8S/qLaXEC4aE")
                                 .SetP8keyID("RRY854U4N4")
@@ -63,20 +63,39 @@ namespace ConsoleApp1
                                 .SetAppBundleID(appBundleID) 
                                 .SetAPNsServer(APNsServer.Development) 
                                 .Build();
-            await DoSomething();
 
-        }
+            //要推播的class
+            var notification = new IOSNotificationBuilder()
+                                    .SetTitle("標頭10")
+                                    .SetContent("內文10")
+                                    .SetCategory("0")
+                                    .SetBadge(1)
+                                    .SetNotificationSN(999)
+                                    .SetCreateDate("2020-02-11 10:58:27")
+                                    .SetLink("https://osis.hamastar.com.tw/ICS_Application/CheckMailandPhone/0/5")
+                                    .SetEncryptSN("dddd")
+                                    .Build();
 
-        async static Task DoSomething()
-        {
-            var notification = GetTestPayload();
+
+
+
+
             var jsonObj = JsonConvert.SerializeObject(notification);
             Debug.WriteLine("JSON Dictionary: " + jsonObj);
-
+            //
             List<string> deviceTokens = new List<string>();
             deviceTokens.Add(devicetoken1);
 
-            //---回覆的資料---
+            //送出推播
+            await SendNotification(notification, deviceTokens);
+
+        }
+
+        async static Task SendNotification(AppleNotification notification, List<string> deviceTokens)
+        {
+            if (notification == null || deviceTokens == null) return;
+            if (deviceTokens.Count == 0) return;
+
             foreach (var devicetoken in deviceTokens)
             {
                 APNsResponse aPNsResponse = await iOSPushService.PushAsync(notification, devicetoken);
@@ -86,25 +105,24 @@ namespace ConsoleApp1
 
         static AppleNotification GetTestPayload()
         {
-            var notification = new AppleNotification();
             var alertBody = new AlertBody();
             alertBody.Title = "標頭2";
             alertBody.SubTitle = "副標題";
             alertBody.Content = "內文2";
 
             var payload = new ApsPayload();
-            payload.Category = "NORMAL"; 
-            payload.Badge = 22;
-            payload.Sound = "default";
+            payload.Category = "0"; 
+            payload.Badge = 2;
             payload.AlertBody = alertBody;
+            //payload.MutableContent = 1; //手機收到推播前預先處裡機制
 
-            var detailPlayload = new DetailPlayload();
-            detailPlayload.SN = 12;
-
-
+            var notification = new AppleNotification();
             notification.Aps = payload;
-            notification.Detail = detailPlayload;
-
+            notification.NotificationSN = 82;
+            notification.CreateDate = "2020-02-11 10:58:27";
+            notification.Link = "https://osis.hamastar.com.tw/ICS_Application/CheckMailandPhone/0/5";
+            notification.EncryptSN = "@#$F@#$$@FF";
+           
             return notification;
         }
 

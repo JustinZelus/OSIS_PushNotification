@@ -8,11 +8,8 @@ using System.Text;
 
 namespace PushNotification.IOS.Main
 {
-    //public class P8JwtBuilder : IP8Jwt
-        public class P8JwtBuilder
+    public class P8JwtBuilder
     {
-       // string IP8Jwt.P8Jwt { get; set; }
-        
         private string _p8key;
         private string _p8keyID;
         private string _teamID;
@@ -49,7 +46,6 @@ namespace PushNotification.IOS.Main
                 return this;
             }
         }
-
 
         public P8JwtBuilder SetP8Key(string key)
         {

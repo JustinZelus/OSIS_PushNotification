@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace PushNotification.IOS.Main
 {
- 
+
 
     public class IOSPushNotificationService
     {
-        ITokenBasedAuthentication jwtProvider;
-        IAPNs aPNsSender;
+        private ITokenBasedAuthentication jwtProvider;
+        private IAPNs aPNsSender;
 
         private string _p8key;
         private string _p8keyID;
