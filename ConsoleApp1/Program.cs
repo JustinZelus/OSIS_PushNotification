@@ -1,4 +1,8 @@
 ﻿using Newtonsoft.Json;
+using PushNotification.Android.Main;
+using PushNotification.Android.Model;
+using PushNotification.Common;
+using PushNotification.Common.Model;
 using PushNotification.IOS.Enums;
 using PushNotification.IOS.Interfaces;
 using PushNotification.IOS.Main;
@@ -39,70 +43,125 @@ namespace ConsoleApp1
     class Program
     {
         //欲推播的手機token
-        static string devicetoken1 = "f1aee4cd0aaa9823df123c5fe24a8974583269a717a4f7283e4d1c75f60dd47b"; //justin
+        static string devicetoken1 = "c4ab47a790fb128993d83759fe6e2a0139a394ddbc65d0091ce777506cd123ae"; //justin
         static string devicetoken2 = "8c45caf058b3660914bb751cfd98e5bae53fb7e8602e3bd589acb455762454f4"; //Ruru
         static string devicetoken3 = "25dd28084fbbe6763756a101e4fa283ee07f296b20152586e844de87ee62c08e"; //羿伻
         //
-        static string appBundleID = "com.hamastar.intelligence.cityservice";
+        //static string appBundleID = "com.hamastar.intelligence.cityservice";
         //推播的類
-        static IOSPushNotificationService iOSPushService;
+       // static IOSPushNotificationService iOSPushService;
+
+        static string deviceType = "IOS";
 
         async static Task Main(string[] args)
         {
-         
-            //IP8FileHelper p8FileHelper = new P8FileHelper(GetP8FilePath());
-            //Debug.WriteLine(p8FileHelper.ToString());
-           
-            iOSPushService = IOSPushNotificationService.Builder()
+            //ios service
+            var iOSPushService = IOSPushNotificationService.Builder()
                                 .SetP8key("MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgNdbDhCgPQOjJ9BQF21Q+IWXvyU/54swqOC5m0jkEvEKgCgYIKoZIzj0DAQehRANCAAR5PatQ2QHIVloZFOe7mwife1MW6fHg3BwRg0az3L6hUrfUY1YXwXGK86gTTUqlSGxnFuCoh/lJ8S/qLaXEC4aE")
                                 .SetP8keyID("RRY854U4N4")
                                 .SetP8TeamID("BK76F98DY7")
                                 //.SetP8key(p8FileHelper.GetP8Key()) 
                                 //.SetP8keyID(p8FileHelper.GeP8KeyID())
                                 //.SetP8TeamID(p8FileHelper.GetTeamID()) 
-                                .SetAppBundleID(appBundleID) 
+                                .SetAppBundleID("com.hamastar.intelligence.cityservice") 
                                 .SetAPNsServer(APNsServer.Development) 
                                 .Build();
 
-            //要推播的class
+            //ios notification
             var notification = new IOSNotificationBuilder()
                                     .SetTitle("標頭2")
                                     .SetContent("一般訊息2")
                                     .SetCategory("0")
                                     .SetBadge(1)
                                     .SetNotificationSN(86)
-                                    .SetCreateDate("2019-03-14 16:58:27")
+                                    .SetCreateDate("2020-02-15 16:58:27")
                                     .SetLink("https://osis.hamastar.com.tw/ICS_Application/CheckMailandPhone/0/5")
                                     .SetEncryptSN("asdasd222")
                                     .Build();
 
-
-
-
-
             var jsonObj = JsonConvert.SerializeObject(notification);
-            Debug.WriteLine("JSON Dictionary: " + jsonObj);
-            //
-            List<string> deviceTokens = new List<string>();
-            deviceTokens.Add(devicetoken1);
-            deviceTokens.Add(devicetoken2);
+            Debug.WriteLine("ios notification: ",jsonObj);
 
-            //送出推播
-            await SendNotification(notification, deviceTokens);
+            //--------
+            //------------
+            //--------
 
-        }
+            //android service
+            var androidPushService = new AndroidPushNotificationService();
 
-        async static Task SendNotification(AppleNotification notification, List<string> deviceTokens)
-        {
-            if (notification == null || deviceTokens == null) return;
-            if (deviceTokens.Count == 0) return;
+            //android notification
+            //...
+            //.... todo ...
 
-            foreach (var devicetoken in deviceTokens)
+
+            PushNotificationService2 pushNotificationService = new PushNotificationService2().Instance;
+            //PushNotificationService2 pushNotificationService = PushNotificationService2.GetInstance();
+
+            pushNotificationService.AndroidPushService = androidPushService;
+            pushNotificationService.IOSPushService = iOSPushService;
+
+            var pushAndroidData = new AndroidPushData
             {
-                APNsResponse aPNsResponse = await iOSPushService.PushAsync(notification, devicetoken);
-                Debug.WriteLine("APNsResponse: " + aPNsResponse);
-            }
+                DeviceToken = devicetoken1,
+                Notification = new AndroidNotification()
+            };
+
+            var pushIOSData = new IOSPushData
+            {
+                DeviceToken = devicetoken1,
+                Notification = notification
+            };
+
+            // set data
+            //if (deviceType.Equals("IOS"))
+            //    pushNotificationService.NotificationData.AddIOS
+            //    (
+            //        new IOSPushData
+            //        { 
+            //            DeviceToken = devicetoken1,
+            //            Notification = notification 
+            //        }
+            //    );
+            //else if (deviceType.Equals("Android"))
+            //    pushNotificationService.NotificationData.AddAndroid
+            //    (
+            //        new AndroidPushData 
+            //        { 
+            //            DeviceToken = devicetoken1, 
+            //            Notification = new AndroidNotification() 
+            //        }
+            //    );
+
+
+
+
+            //final
+            pushNotificationService.IOSPushService     = iOSPushService;
+            pushNotificationService.AndroidPushService = androidPushService;
+
+
+           pushNotificationService.EnqueueData(pushAndroidData);
+            pushNotificationService.EnqueueData(pushIOSData);
+
+
+
+            //  pushNotificationService.Run();
+            //pushNotificationService.Push(pushIOSData)
+
+            Console.ReadKey();
         }
+
+        //async static Task SendNotification(AppleNotification notification, List<string> deviceTokens)
+        //{
+        //    if (notification == null || deviceTokens == null) return;
+        //    if (deviceTokens.Count == 0) return;
+
+        //    foreach (var devicetoken in deviceTokens)
+        //    {
+        //        APNsResponse aPNsResponse = await iOSPushService.PushAsync(notification, devicetoken);
+        //        Debug.WriteLine("APNsResponse: " + aPNsResponse);
+        //    }
+        //}
 
         static AppleNotification GetTestPayload()
         {

@@ -6,7 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PushNotification\PushNotification.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Net.Http.WinHttpHandler" Version="4.7.0" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PushNotification">
+      <HintPath>..\PushNotification\bin\Debug\netcoreapp3.1\PushNotification.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

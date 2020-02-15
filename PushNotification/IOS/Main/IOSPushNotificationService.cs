@@ -1,4 +1,5 @@
-﻿using PushNotification.IOS.Enums;
+﻿using PushNotification.Common.Interfaces;
+using PushNotification.IOS.Enums;
 using PushNotification.IOS.Interfaces;
 using PushNotification.IOS.Model;
 using System;
@@ -9,8 +10,7 @@ using System.Threading.Tasks;
 namespace PushNotification.IOS.Main
 {
 
-
-    public class IOSPushNotificationService
+    public class IOSPushNotificationService: IPushNotificationService
     {
         private ITokenBasedAuthentication jwtProvider;
         private IAPNs aPNsSender;
@@ -35,7 +35,7 @@ namespace PushNotification.IOS.Main
             aPNsSender = new APNsSender(appBundleID);
         }
 
-        public async Task<APNsResponse> PushAsync(object notification, string deviceToken)
+        public async Task<APNsResponse> PushAsync(string deviceToken, object notification)
         {
             if (aPNsSender == null) return null;
 
@@ -43,11 +43,7 @@ namespace PushNotification.IOS.Main
             return await aPNsSender.SendAsync(jwt, notification, deviceToken, _envType);
         }
 
-        //public async Task<APNsResponse> Push2(object notification, string deviceToken)
-        //{
-        //    if (aPNsSender == null) return null;
-        //    return aPNsSender.SendAsync(notification, deviceToken, _envType).Result;
-        //}
+
         public IOSPushNotificationService Build()
         {
             jwtProvider = new TokenBasedAuthentication(_p8key, _p8keyID, _teamID);
