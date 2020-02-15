@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿
 using Newtonsoft.Json;
 using PushNotification.IOS;
 using PushNotification.IOS.Enums;
@@ -83,6 +83,7 @@ namespace PushNotification
             {
                 APNsResponse aPNsResponse = await iOSPushService.PushAsync(notification, devicetoken);
                 Debug.WriteLine("APNsResponse: " + aPNsResponse);
+                
             }
         }
 

@@ -39,8 +39,8 @@ namespace ConsoleApp1
     class Program
     {
         //欲推播的手機token
-        static string devicetoken1 = "67a7343e5f1504c66274a48e7bc0053cc1bf6b279584386476d4ef9696ec53d2"; //justin
-        static string devicetoken2 = "e2cb81a9417812db39fd1c435c0f1734db50809acf487cf6aed7af827c1eedd4"; //Ruru
+        static string devicetoken1 = "f1aee4cd0aaa9823df123c5fe24a8974583269a717a4f7283e4d1c75f60dd47b"; //justin
+        static string devicetoken2 = "8c45caf058b3660914bb751cfd98e5bae53fb7e8602e3bd589acb455762454f4"; //Ruru
         static string devicetoken3 = "25dd28084fbbe6763756a101e4fa283ee07f296b20152586e844de87ee62c08e"; //羿伻
         //
         static string appBundleID = "com.hamastar.intelligence.cityservice";
@@ -49,7 +49,7 @@ namespace ConsoleApp1
 
         async static Task Main(string[] args)
         {
-
+         
             //IP8FileHelper p8FileHelper = new P8FileHelper(GetP8FilePath());
             //Debug.WriteLine(p8FileHelper.ToString());
            
@@ -66,14 +66,14 @@ namespace ConsoleApp1
 
             //要推播的class
             var notification = new IOSNotificationBuilder()
-                                    .SetTitle("標頭10")
-                                    .SetContent("內文10")
+                                    .SetTitle("標頭2")
+                                    .SetContent("一般訊息2")
                                     .SetCategory("0")
                                     .SetBadge(1)
-                                    .SetNotificationSN(999)
-                                    .SetCreateDate("2020-02-11 10:58:27")
+                                    .SetNotificationSN(86)
+                                    .SetCreateDate("2019-03-14 16:58:27")
                                     .SetLink("https://osis.hamastar.com.tw/ICS_Application/CheckMailandPhone/0/5")
-                                    .SetEncryptSN("dddd")
+                                    .SetEncryptSN("asdasd222")
                                     .Build();
 
 
@@ -85,6 +85,7 @@ namespace ConsoleApp1
             //
             List<string> deviceTokens = new List<string>();
             deviceTokens.Add(devicetoken1);
+            deviceTokens.Add(devicetoken2);
 
             //送出推播
             await SendNotification(notification, deviceTokens);
