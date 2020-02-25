@@ -2,6 +2,7 @@
 using PushNotification.Android.Main;
 using PushNotification.Android.Model;
 using PushNotification.Common;
+using PushNotification.Common.Interfaces;
 using PushNotification.Common.Model;
 using PushNotification.IOS.Enums;
 using PushNotification.IOS.Interfaces;
@@ -43,9 +44,9 @@ namespace ConsoleApp1
     class Program
     {
         //欲推播的手機token
-        static string devicetoken1 = "c4ab47a790fb128993d83759fe6e2a0139a394ddbc65d0091ce777506cd123ae"; //justin
+        static string devicetoken1 = "109729e72fbc91d29c17e397a0be40b745b7b205269a82347d4076da0c7638dc"; //justin
         static string devicetoken2 = "8c45caf058b3660914bb751cfd98e5bae53fb7e8602e3bd589acb455762454f4"; //Ruru
-        static string devicetoken3 = "25dd28084fbbe6763756a101e4fa283ee07f296b20152586e844de87ee62c08e"; //羿伻
+        static string devicetoken3 = "aa69d0ac8d50ceca782747e107347ef72140918688a72a1b62b70ae1869da88f"; //羿伻
         //
         //static string appBundleID = "com.hamastar.intelligence.cityservice";
         //推播的類
@@ -71,7 +72,7 @@ namespace ConsoleApp1
             var notification = new IOSNotificationBuilder()
                                     .SetTitle("標頭2")
                                     .SetContent("一般訊息2")
-                                    .SetCategory("0")
+                                    .SetCategory("R")
                                     .SetBadge(1)
                                     .SetNotificationSN(86)
                                     .SetCreateDate("2020-02-15 16:58:27")
@@ -82,71 +83,74 @@ namespace ConsoleApp1
             var jsonObj = JsonConvert.SerializeObject(notification);
             Debug.WriteLine("ios notification: ",jsonObj);
 
-            //--------
-            //------------
-            //--------
+           
+            ///////////////
+          
 
             //android service
             var androidPushService = new AndroidPushNotificationService();
-
             //android notification
             //...
             //.... todo ...
 
 
-            PushNotificationService2 pushNotificationService = new PushNotificationService2().Instance;
-            //PushNotificationService2 pushNotificationService = PushNotificationService2.GetInstance();
+            PushNotificationService pushNotificationService = new PushNotificationService().Instance;
+            
+           // pushNotificationService.AndroidPushService = androidPushService;
+           if(iOSPushService != null)
+                pushNotificationService.IOSPushService = iOSPushService;
 
-            pushNotificationService.AndroidPushService = androidPushService;
-            pushNotificationService.IOSPushService = iOSPushService;
+            List<string> deviceTokens = new List<string>();
+         //   deviceTokens.Add(devicetoken1);
+            deviceTokens.Add(devicetoken1);
 
-            var pushAndroidData = new AndroidPushData
+            foreach (var token in deviceTokens)
             {
-                DeviceToken = devicetoken1,
-                Notification = new AndroidNotification()
-            };
+                //TODO: 用工廠模式創建Data。
+                //給property，若工廠判斷符合，則產出對應的data
 
-            var pushIOSData = new IOSPushData
-            {
-                DeviceToken = devicetoken1,
-                Notification = notification
-            };
+                IData data = null;
+                if (deviceType.Equals("IOS"))
+                {
+                    data = new IOSPushData
+                    {
+                        DeviceToken = token,
+                        Notification = notification
+                    };
+                }
+                else if (deviceType.Equals("Android"))
+                {
+                    data = new AndroidPushData
+                    {
+                        DeviceToken = token,
+                        Notification = new AndroidNotification()
+                    };
+                }
+                pushNotificationService.EnqueueData(data);
+            }
 
-            // set data
-            //if (deviceType.Equals("IOS"))
-            //    pushNotificationService.NotificationData.AddIOS
-            //    (
-            //        new IOSPushData
-            //        { 
+            //for (int i = 0; i < deviceTokens.Count; i++)
+            //{
+            //    IData data = null;
+            //    if (deviceType.Equals("IOS"))
+            //    {
+            //        data = new IOSPushData
+            //        {
             //            DeviceToken = devicetoken1,
-            //            Notification = notification 
-            //        }
-            //    );
-            //else if (deviceType.Equals("Android"))
-            //    pushNotificationService.NotificationData.AddAndroid
-            //    (
-            //        new AndroidPushData 
-            //        { 
-            //            DeviceToken = devicetoken1, 
-            //            Notification = new AndroidNotification() 
-            //        }
-            //    );
+            //            Notification = notification
+            //        };
+            //    }
+            //    else if (deviceType.Equals("Android"))
+            //    {
+            //        data = new AndroidPushData
+            //        {
+            //            DeviceToken = devicetoken1,
+            //            Notification = new AndroidNotification()
+            //        };
+            //    }
+            //    pushNotificationService.EnqueueData(data);
+            //} 
 
-
-
-
-            //final
-            pushNotificationService.IOSPushService     = iOSPushService;
-            pushNotificationService.AndroidPushService = androidPushService;
-
-
-           pushNotificationService.EnqueueData(pushAndroidData);
-            pushNotificationService.EnqueueData(pushIOSData);
-
-
-
-            //  pushNotificationService.Run();
-            //pushNotificationService.Push(pushIOSData)
 
             Console.ReadKey();
         }

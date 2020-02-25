@@ -99,8 +99,8 @@ namespace PushNotification
 
             foreach (var devicetoken in deviceTokens)
             {
-                APNsResponse aPNsResponse = await iOSPushService.PushAsync(notification, devicetoken);
-                Debug.WriteLine("APNsResponse: " + aPNsResponse);
+                //APNsResponse aPNsResponse = await iOSPushService.PushAsync(notification, devicetoken);
+                //Debug.WriteLine("APNsResponse: " + aPNsResponse);
             }
         }
 

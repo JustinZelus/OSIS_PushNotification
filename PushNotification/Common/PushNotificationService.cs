@@ -1,6 +1,12 @@
-﻿using PushNotification.IOS.Main;
+﻿
+using PushNotification.Android.Main;
+using PushNotification.Android.Model;
+using PushNotification.Common.Interfaces;
+using PushNotification.Common.Model;
+using PushNotification.IOS.Main;
 using PushNotification.IOS.Model;
-
+using PushNotification.Web.Main;
+using PushNotification.Web.Model;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,7 +15,13 @@ using System.Linq;
 using System.Timers;
 
 namespace PushNotification.Common
-{ 
+{
+    public enum DataType
+    {
+        Android, IOS, Web
+    }
+
+
     public class PushNotificationService
     {
         private static PushNotificationService _instance { get; set; } = null;
@@ -26,117 +38,50 @@ namespace PushNotification.Common
 
         }
 
+        private PushNotificationServiceProvider<IOSPushData> iosServiceProvier { get; set; }
+        private PushNotificationServiceProvider<AndroidPushData> androidServiceProvier { get; set; }
+        private PushNotificationServiceProvider<WebPushData> webServiceProvier { get; set; }
         public PushNotificationService()
         {
-            _execTimer.Interval = 100;
-            _execTimer.Elapsed += new ElapsedEventHandler(SendProcess);
-            _execTimer.Enabled = true;
-            _execTimer.Start();
+            iosServiceProvier = new PushNotificationServiceProvider<IOSPushData>();
+            //androidServiceProvier = new PushNotificationServiceProvider<AndroidPushData>();
+            //webServiceProvier = new PushNotificationServiceProvider<WebPushData>();
         }
-        
-        private static ConcurrentQueue<Dictionary<string, AppleNotification>> vip_iosPushDataSet = new ConcurrentQueue<Dictionary<string, AppleNotification>>();
-        private static ConcurrentQueue<Dictionary<string, AppleNotification>> iosPushDataSet = new ConcurrentQueue<Dictionary<string, AppleNotification>>();
-
-
-
-
-        private Timer _execTimer = new Timer();
-        public Timer ExecTimer
+        public void EnqueueData(IData data)
         {
-            get
-            {
-                if (_execTimer == null)
-                    _execTimer = new Timer();
-                return _execTimer;
-            }
-
+            if (data is IOSPushData)
+                iosServiceProvier.EnqueueData(data);
+            if (data is  AndroidPushData)
+                androidServiceProvier.EnqueueData(data);
+            if (data is WebPushData)
+                webServiceProvier.EnqueueData(data);
         }
-        private IOSPushNotificationService _iOSPushService;
 
-
-        public void SetIOSPushNotificationService(IOSPushNotificationService iOSPushService)
+        private void SetService(IPushNotificationService service)
         {
-            if (iOSPushService != null)
-                _iOSPushService = iOSPushService;
+            if (service is IOSPushNotificationService)
+                iosServiceProvier.Service = service;
+
+            if (service is AndroidPushNotificationService)
+                androidServiceProvier.Service = service;
+
+            if (service is WebPushNotificationService)
+                webServiceProvier.Service = service;
         }
 
-
-        public void PushIOS(Dictionary<string, AppleNotification> data)
+        public IOSPushNotificationService IOSPushService 
         {
-            EnqueueData(data);
+            set => SetService(value);
         }
 
-        private void SendProcess(object sender, ElapsedEventArgs e)
+        public AndroidPushNotificationService AndroidPushService
         {
-            Timer timer = (Timer)sender;
-            try
-            {
-
-                if (iosPushDataSet.IsEmpty && vip_iosPushDataSet.IsEmpty)
-                    return;
-                else
-                    timer.Enabled = false;
-
-                Dictionary<string, AppleNotification> result;
-
-                if (vip_iosPushDataSet.TryDequeue(out result) || iosPushDataSet.TryDequeue(out result))
-                {
-                    //ios推播
-                    if (result != null && _iOSPushService != null)
-                    //if (result != null && result.key == "iOS")
-                    {
-                        //timer.Enabled = false;
-                        //do something
-                        var iosData = result.First();
-                        if (iosData.Key != null && iosData.Value != null)
-                        {
-                            var task = _iOSPushService.PushAsync(iosData.Value, iosData.Key);
-                            task.Wait();
-
-                            APNsResponse aPNsResponse = task.Result;
-                            Debug.WriteLine("APNsResponse: " + aPNsResponse);
-                        }
-
-                    }
-                    //Android推播
-                    else
-                    {
-
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("SendProcess Exception:", ex);
-            }
-            finally
-            {
-                timer.Enabled = true;
-
-            }
+            set => SetService(value);
         }
 
-        private void EnqueueData(Dictionary<string, AppleNotification> data)
+        private WebPushNotificationService WebPushService
         {
-            if (iosPushDataSet != null && data != null && data.Count > 0)
-            {
-                foreach (KeyValuePair<string, AppleNotification> item in data)
-                {
-                    var dictionary = new Dictionary<string, AppleNotification>
-                    {
-                       {
-                          item.Key, item.Value
-                       }
-
-                    };
-
-                    iosPushDataSet.Enqueue(dictionary);
-                }
-            }
-
+            set => SetService(value);
         }
-
-
     }
 }
